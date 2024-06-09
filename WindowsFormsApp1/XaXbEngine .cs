@@ -4,51 +4,39 @@ namespace WindowsFormsApp1
 {
     internal class XaXbEngine
     {
-        // 幸运数字
-        private string luckyNumber;
+        private string luckyNumber; // 儲存隨機生成的幸運數字
 
-        // 构造函数，初始化幸运数字
         public XaXbEngine()
         {
-            // 生成随机数对象
-            Random random = new Random();
+            Random random = new Random(); // 生成隨機數對象
             int[] tem = new int[3];
-            tem[0] = random.Next(0, 9);
-            tem[1] = random.Next(0, 9);
-            tem[2] = random.Next(0, 9);
-
-            // 确保生成的幸运数字没有重复的数字
-            while (tem[0] == tem[1] || tem[1] == tem[2] || tem[0] == tem[2])
+            tem[0] = random.Next(0, 10); // 生成第一個數字
+            do
             {
-                tem[1] = random.Next(0, 9);
-                tem[2] = random.Next(0, 9);
-            }
+                tem[1] = random.Next(0, 10); // 生成第二個數字，確保不重複
+            } while (tem[1] == tem[0]);
+            do
+            {
+                tem[2] = random.Next(0, 10); // 生成第三個數字，確保不重複
+            } while (tem[2] == tem[0] || tem[2] == tem[1]);
 
-            // 将生成的数字组合成字符串作为幸运数字
+            // 組合生成的數字成字符串作為幸運數字
             luckyNumber = $"{tem[0]}{tem[1]}{tem[2]}";
         }
 
-        // 判断用户输入的数字是否合法（三个数字不相同）
+        // 判斷用戶輸入的數字是否合法（三個數字不同）
         public bool IsLegal(string theNumber)
         {
-            char[] tem = theNumber.ToCharArray();
-            if (tem.Length == 3)
-            {
-                if (tem[0] != tem[1] && tem[1] != tem[2] && tem[0] != tem[2])
-                {
-                    return true;
-                }
-            }
-            return false;
+            return theNumber.Length == 3;
         }
 
-        // 根据用户输入的数字计算结果
+        // 根據用戶輸入的數字計算結果
         public string GetResult(string userNumber)
         {
             char[] user = userNumber.ToCharArray();
-            char[] ans = this.luckyNumber.ToCharArray();
-            int a = 0;
-            int b = 0;
+            char[] ans = luckyNumber.ToCharArray();
+            int a = 0; // 計算位置和數字都正確的數量
+            int b = 0; // 計算數字正確但位置不正確的數量
             for (int i = 0; i < user.Length; i++)
             {
                 for (int j = 0; j < ans.Length; j++)
@@ -66,10 +54,10 @@ namespace WindowsFormsApp1
                     }
                 }
             }
-            return $"{a}A{b}B";
+            return $"{a}A{b}B"; // 返回結果
         }
 
-        // 判断是否猜中幸运数字
+        // 判斷是否猜中幸運數字
         public bool IsGameover(string userNumber)
         {
             return GetResult(userNumber) == "3A0B";
